@@ -38,7 +38,7 @@ class MobileViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val txtDescription: TextView = itemView.findViewById(R.id.description)
     private val txtPrice: TextView = itemView.findViewById(R.id.price)
     private val txtRating: TextView = itemView.findViewById(R.id.rating)
-    private val BtnFavorite: ImageButton = itemView.findViewById(R.id.imageButton3)
+    private val btnFavorite: ImageButton = itemView.findViewById(R.id.imageButton3)
 
     fun bind(model: MobileModel, listener: OnMobileClickListener) {
 
@@ -54,24 +54,26 @@ class MobileViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
         var check = model.chacked
 
-        BtnFavorite.setOnClickListener {
+        btnFavorite.setOnClickListener {
             if (check === false) {
-                BtnFavorite.setBackgroundResource(R.drawable.heartfull)
+                btnFavorite.setBackgroundResource(R.drawable.heartfull)
                 check = true
             } else {
-                BtnFavorite.setBackgroundResource(R.drawable.heart)
+                btnFavorite.setBackgroundResource(R.drawable.heart)
                 check = false
             }
         }
 
 
+
+
         itemView.setOnClickListener { listener.onMobileClick(model) }
 
     }
-
-    private fun saveFavorite(mobile : MobileModel){
 //
-    }
+//    private fun saveFavorite(mobile : MobileModel){
+////
+//    }
 }
 
 interface OnMobileClickListener {

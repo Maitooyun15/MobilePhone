@@ -21,6 +21,7 @@
             <TextView
                     android:id="@+id/title"
                     android:layout_width="317dp"
+                    android:layout_marginRight="10dp"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:minHeight="?actionBarSize"
@@ -28,13 +29,13 @@
                     android:text="@string/app_name"
                     android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"/>
             <ImageButton
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="18dp"
+                    android:layout_height="match_parent"
                     android:src="@drawable/sort"
                     android:scaleType="centerInside"
                     android:background="@color/design_default_color_primary"
-                    android:id="@+id/imageButton"
-                    android:layout_gravity="right"/>
+                    android:id="@+id/btnSort"
+            />
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
@@ -47,6 +48,7 @@
 
     <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
+            android:background="@color/colorBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
