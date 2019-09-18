@@ -1,4 +1,4 @@
-package com.example.mobilephone.ui.main
+package com.example.mobilephone.view
 
 import com.example.mobilephone.model.MobileModel
 

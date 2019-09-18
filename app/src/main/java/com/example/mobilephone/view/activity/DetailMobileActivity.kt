@@ -1,22 +1,18 @@
-package com.example.mobilephone
+package com.example.mobilephone.view.activity
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager.widget.ViewPager
-import com.example.mobilephone.adapter.ImageAdapter
-import com.example.mobilephone.adapter.MobileAdapter
+import com.example.mobilephone.R
+import com.example.mobilephone.view.adapter.ImageAdapter
 import com.example.mobilephone.model.MobileImageModel
 import com.example.mobilephone.model.MobileModel
-import com.example.mobilephone.model.MobilePhoneManager
+import com.example.mobilephone.service.MobilePhoneManager
 import com.example.mobilephone.presenter.MobileIdPresenter
-import com.example.mobilephone.ui.main.MobileImageInterface
-import com.squareup.picasso.Picasso
+import com.example.mobilephone.view.MobileImageInterface
 import kotlinx.android.synthetic.main.activity_detailmobile.*
-import kotlinx.android.synthetic.main.fragment_mobile.*
 
 class DetailMobileActivity : AppCompatActivity() , MobileImageInterface {
 
@@ -42,8 +38,8 @@ class DetailMobileActivity : AppCompatActivity() , MobileImageInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detailmobile)
 
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-        getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
 
 

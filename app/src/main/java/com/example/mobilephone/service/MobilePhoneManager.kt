@@ -1,4 +1,4 @@
-package com.example.mobilephone.model
+package com.example.mobilephone.service
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

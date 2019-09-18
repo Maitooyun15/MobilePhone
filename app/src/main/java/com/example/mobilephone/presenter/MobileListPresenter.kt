@@ -1,8 +1,8 @@
 package com.example.mobilephone.presenter
 
-import com.example.mobilephone.model.MobileApiService
+import com.example.mobilephone.service.MobileApiService
 import com.example.mobilephone.model.MobileModel
-import com.example.mobilephone.ui.main.MobileInterface
+import com.example.mobilephone.view.MobileInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,11 +1,12 @@
-package com.example.mobilephone
+package com.example.mobilephone.view.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mobilephone.R
 import com.example.mobilephone.model.FragmentModel
-import com.example.mobilephone.ui.main.FavoriteFragment
-import com.example.mobilephone.ui.main.MobileFragment
-import com.example.mobilephone.ui.main.SectionsPagerAdapter
+import com.example.mobilephone.view.fragment.FavoriteFragment
+import com.example.mobilephone.view.fragment.MobileFragment
+import com.example.mobilephone.view.adapter.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         // viewPager คือตัวที่ hold หน้าสองหน้า fragment tab รับ adaptor เข้ามา ต้องการ viewpagger
-        val sectionsPagerAdapter = SectionsPagerAdapter(homeList, supportFragmentManager)
+        val sectionsPagerAdapter =
+            SectionsPagerAdapter(homeList, supportFragmentManager)
         view_pager.adapter = sectionsPagerAdapter
         tabs.setupWithViewPager(view_pager)
     }

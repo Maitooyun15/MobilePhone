@@ -1,4 +1,4 @@
-package com.example.mobilephone.adapter
+package com.example.mobilephone.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

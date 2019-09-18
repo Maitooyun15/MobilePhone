@@ -1,4 +1,4 @@
-package com.example.mobilephone.ui.main
+package com.example.mobilephone.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,8 @@ class FavoriteFragment : Fragment() {
 
     companion object {
         // ส่งหน้าตัวเอง
-        fun newInstance(): FavoriteFragment = FavoriteFragment()
+        fun newInstance(): FavoriteFragment =
+            FavoriteFragment()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -1,7 +1,5 @@
-package com.example.mobilephone.adapter
+package com.example.mobilephone.view.adapter
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -43,12 +41,14 @@ class MobileViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val BtnFavorite: ImageButton = itemView.findViewById(R.id.imageButton3)
 
     fun bind(model: MobileModel, listener: OnMobileClickListener) {
+
+
         Picasso.get()
             .load(model.imageUrl)
             .placeholder(R.mipmap.ic_launcher)
             .into(iImage)
         txtName.text = model.name
-        txtDescription.text = model.description + "."
+        txtDescription.text = model.description
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 

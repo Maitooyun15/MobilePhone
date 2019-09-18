@@ -1,5 +1,7 @@
-package com.example.mobilephone.model
+package com.example.mobilephone.service
 
+import com.example.mobilephone.model.MobileImageModel
+import com.example.mobilephone.model.MobileModel
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
