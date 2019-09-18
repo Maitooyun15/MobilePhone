@@ -1,7 +1,9 @@
 package com.example.mobilephone.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +24,7 @@ class MobileAdapter(private val mobileList: List<MobileModel>  , private val lis
     }
 
     override fun onBindViewHolder(holder: MobileViewHolder, position: Int) {
+       // Log.i("pppp", mobileList.toString())
         holder.bind(mobileList[position] , listener )
     }
 
@@ -36,6 +39,7 @@ class MobileViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val txtDescription: TextView = itemView.findViewById(R.id.description)
     private val txtPrice: TextView = itemView.findViewById(R.id.price)
     private val txtRating: TextView = itemView.findViewById(R.id.rating)
+    private val BtnFavorite: ImageButton = itemView.findViewById(R.id.imageButton3)
 
     fun bind(model: MobileModel , listener: OnMobileClickListener) {
         Picasso.get()
@@ -43,10 +47,12 @@ class MobileViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
             .placeholder(R.mipmap.ic_launcher)
             .into(iImage)
         txtName.text = model.name
-        txtDescription.text = model.description
-        txtPrice.text = "${model.price}"
-        txtRating.text = "${model.rating}"
+        txtDescription.text = model.description +"."
+        txtPrice.text = "Price: $${model.price}"
+        txtRating.text = "Rating: ${model.rating}"
+        
         itemView.setOnClickListener { listener.onMobileClick(model) }
+
     }
 
 
