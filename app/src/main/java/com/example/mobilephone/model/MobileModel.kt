@@ -9,24 +9,26 @@ import kotlinx.android.parcel.Parcelize
 data class MobileModel(
 
     @SerializedName("id")
-    val id: Int?,
+    val id: Int,
 
     @SerializedName("name")
-    val name: String?,
+    val name: String,
 
     @SerializedName("description")
-    val description: String?,
+    val description: String,
 
     @SerializedName("brand")
-    val band: String?,
+    val band: String,
 
     @SerializedName("thumbImageURL")
-    val imageUrl: String?,
+    val imageUrl: String,
 
     @SerializedName("rating")
-    val rating: Double?,
+    val rating: Double,
 
     @SerializedName("price")
-    val price: Double?
+    val price: Double ,
+
+    val chacked: Boolean = false
 
 ) : Parcelable
