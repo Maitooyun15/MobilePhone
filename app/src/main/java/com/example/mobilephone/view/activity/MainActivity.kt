@@ -1,8 +1,10 @@
 package com.example.mobilephone.view.activity
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.mobilephone.R
 import com.example.mobilephone.model.FragmentModel
 import com.example.mobilephone.view.fragment.FavoriteFragment
@@ -11,6 +13,9 @@ import com.example.mobilephone.view.adapter.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private var check = 0
+    private lateinit var sectionsPagerAdapter : SectionsPagerAdapter
 
     companion object {
         const val SORT1 = "Price low to high"
@@ -26,14 +31,38 @@ class MainActivity : AppCompatActivity() {
         btnSort.setOnClickListener {
             val listItems = arrayOf(SORT1, SORT2, SORT3)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
-            mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
+            mBuilder.setSingleChoiceItems(listItems, check) { dialogInterface, i ->
+                check = i
+                when(i){
+                    0 -> if (check == 0){
+
+                        val fragment = sectionsPagerAdapter.getItem(0)
+                        if (fragment is MobileFragment) {
+                            fragment.sort()
+                        }
+
+                    }
+                    1 -> if (check == 0){
+                        val fragment: Fragment = sectionsPagerAdapter.getItem(0)
+                        if(fragment is MobileFragment){
+                            fragment.sort2()
+                        }
+
+                    }
+                    2-> if (check == 0){
+                        val fragment: Fragment = sectionsPagerAdapter.getItem(0)
+                        if(fragment is MobileFragment){
+                            fragment.sort3()
+                        }
+
+                    }
+                }
                 dialogInterface.dismiss()
             }
 
             val mDialog = mBuilder.create()
             mDialog.show()
         }
-
     }
 
     private fun setView() {
@@ -44,9 +73,12 @@ class MainActivity : AppCompatActivity() {
         )
 
         // viewPager คือตัวที่ hold หน้าสองหน้า fragment tab รับ adaptor เข้ามา ต้องการ viewpagger
-        val sectionsPagerAdapter =
+        sectionsPagerAdapter =
             SectionsPagerAdapter(homeList, supportFragmentManager)
         view_pager.adapter = sectionsPagerAdapter
         tabs.setupWithViewPager(view_pager)
     }
+
+
 }
+

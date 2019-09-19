@@ -7,10 +7,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MobileListPresenter(val view: MobileInterface, private val service: MobileApiService) {
+class MobileSortRatingPresenter (val view: MobileInterface, private val service: MobileApiService){
 
-    fun getMobileApi() {
-        // เป็นประเภทที่ต้อง callback
+    fun getMobileSortRating() {
         service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
             // เช่นกรณีเน็ตหลุด
             override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
@@ -20,7 +19,8 @@ class MobileListPresenter(val view: MobileInterface, private val service: Mobile
             override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
                 response.body()?.apply {
                     if (this.isNotEmpty()) {
-                        view.setMobile(this)
+                        view.setMobile(this.sortedByDescending { it.rating })
+
                     }
                 }
 
@@ -28,4 +28,5 @@ class MobileListPresenter(val view: MobileInterface, private val service: Mobile
 
         })
     }
+
 }

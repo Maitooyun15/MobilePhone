@@ -10,8 +10,15 @@ import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
 import com.squareup.picasso.Picasso
 
-class MobileAdapter(private val mobileList: List<MobileModel>, private val listener: OnMobileClickListener) :
+class MobileAdapter(private val listener: OnMobileClickListener) :
     RecyclerView.Adapter<MobileViewHolder>() {
+
+    private var mobileList = listOf<MobileModel>()
+
+    fun addMobile(list: List<MobileModel>) {
+        this.mobileList = list
+        this.notifyDataSetChanged()
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MobileViewHolder {
@@ -25,6 +32,7 @@ class MobileAdapter(private val mobileList: List<MobileModel>, private val liste
     override fun onBindViewHolder(holder: MobileViewHolder, position: Int) {
         // Log.i("pppp", mobileList.toString())
         holder.bind(mobileList[position], listener)
+
     }
 
 }
@@ -35,8 +43,8 @@ class MobileViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
     private val iImage: ImageView = itemView.findViewById(R.id.imageMobile)
     private val txtName: TextView = itemView.findViewById(R.id.nameMobile)
-    private val txtDescription: TextView = itemView.findViewById(R.id.description)
-    private val txtPrice: TextView = itemView.findViewById(R.id.price)
+    private val txtDescription: TextView = itemView.findViewById(R.id.priceMobile)
+    private val txtPrice: TextView = itemView.findViewById(R.id.ratingMobile)
     private val txtRating: TextView = itemView.findViewById(R.id.rating)
     private val btnFavorite: ImageButton = itemView.findViewById(R.id.imageButton3)
 
@@ -55,25 +63,20 @@ class MobileViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         var check = model.chacked
 
         btnFavorite.setOnClickListener {
-            if (check === false) {
+            check = if (check === false) {
                 btnFavorite.setBackgroundResource(R.drawable.heartfull)
-                check = true
+                true
+
             } else {
                 btnFavorite.setBackgroundResource(R.drawable.heart)
-                check = false
+                false
             }
         }
-
-
-
 
         itemView.setOnClickListener { listener.onMobileClick(model) }
 
     }
-//
-//    private fun saveFavorite(mobile : MobileModel){
-////
-//    }
+
 }
 
 interface OnMobileClickListener {
