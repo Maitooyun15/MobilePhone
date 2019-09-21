@@ -1,68 +1,59 @@
 package com.example.mobilephone.view.activity
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.mobilephone.R
 import com.example.mobilephone.model.FragmentModel
+import com.example.mobilephone.view.adapter.SectionsPagerAdapter
 import com.example.mobilephone.view.fragment.FavoriteFragment
 import com.example.mobilephone.view.fragment.MobileFragment
-import com.example.mobilephone.view.adapter.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var check = 0
-    private lateinit var sectionsPagerAdapter : SectionsPagerAdapter
-    private val SAVENAME = "mobile_favorite"
+
+    private var check = -1
+    private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
 
     companion object {
         const val SORT1 = "Price low to high"
         const val SORT2 = "Price high to low"
         const val SORT3 = "Rating 5-1"
     }
-    
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setView()
 
+
         btnSort.setOnClickListener {
             val listItems = arrayOf(SORT1, SORT2, SORT3)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
-            mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
-                when(i){
-                    0 -> if (check == 0){
+            mBuilder.setSingleChoiceItems(listItems, check) { dialogInterface, i ->
+                check = i
+                when (i) {
+                    0 -> {
                         val fragment = sectionsPagerAdapter.getItem(0)
+
                         if (fragment is MobileFragment) {
                             fragment.sortLowToHigh()
                         }
 
-                        val fragment2 = sectionsPagerAdapter.getItem(1)
-                        if (fragment2 is FavoriteFragment) {
-                            fragment2.sort()
-                        }
-
 
                     }
-                    1 -> if (check == 0){
+                    1 -> {
                         val fragment: Fragment = sectionsPagerAdapter.getItem(0)
-                        if(fragment is MobileFragment){
+                        if (fragment is MobileFragment) {
                             fragment.sortHighToLow()
                         }
 
                     }
-                    2-> if (check == 0){
+                    2 -> {
                         val fragment: Fragment = sectionsPagerAdapter.getItem(0)
-                        if(fragment is MobileFragment){
+                        if (fragment is MobileFragment) {
                             fragment.sortRating()
                         }
 
@@ -70,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 dialogInterface.dismiss()
             }
+
 
             val mDialog = mBuilder.create()
             mDialog.show()

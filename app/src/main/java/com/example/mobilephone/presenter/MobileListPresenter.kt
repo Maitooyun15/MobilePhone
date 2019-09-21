@@ -28,4 +28,66 @@ class MobileListPresenter(val view: MobileInterface, private val service: Mobile
 
         })
     }
+
+
+    fun getMobileHighToLow() {
+        service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
+            // เช่นกรณีเน็ตหลุด
+            override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
+                println("Failed :")
+            }
+
+            override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
+                response.body()?.apply {
+                    if (this.isNotEmpty()) {
+                        view.setMobile(this.sortedByDescending { it.price })
+
+                    }
+                }
+
+            }
+
+        })
+    }
+
+    fun getMobileSortLowToHigh() {
+        service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
+            // เช่นกรณีเน็ตหลุด
+            override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
+                println("Failed :")
+            }
+
+            override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
+                response.body()?.apply {
+                    if (this.isNotEmpty()) {
+                        view.setMobile(this.sortedBy { it.price })
+
+                    }
+                }
+
+            }
+
+        })
+    }
+
+    fun getMobileSortRating() {
+        service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
+            // เช่นกรณีเน็ตหลุด
+            override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
+                println("Failed :")
+            }
+
+            override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
+                response.body()?.apply {
+                    if (this.isNotEmpty()) {
+                        view.setMobile(this.sortedByDescending { it.rating })
+                    }
+                }
+
+            }
+
+        })
+    }
+
+
 }

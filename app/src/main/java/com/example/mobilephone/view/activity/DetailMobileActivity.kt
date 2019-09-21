@@ -12,7 +12,8 @@ import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.service.MobilePhoneManager
 import com.example.mobilephone.presenter.MobileIdPresenter
 import com.example.mobilephone.view.MobileImageInterface
-import kotlinx.android.synthetic.main.activity_detailmobile.*
+import kotlinx.android.synthetic.main.activity_detail_mobile.*
+
 
 class DetailMobileActivity : AppCompatActivity() , MobileImageInterface {
 
@@ -36,7 +37,7 @@ class DetailMobileActivity : AppCompatActivity() , MobileImageInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detailmobile)
+        setContentView(R.layout.activity_detail_mobile)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
