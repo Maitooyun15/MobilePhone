@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso
 class ImageAdapter(private val mobileImage: List<MobileImageModel>) :
     RecyclerView.Adapter<MobileImageViewHolder>() {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MobileImageViewHolder {
         return MobileImageViewHolder(parent)
     }
@@ -23,7 +22,6 @@ class ImageAdapter(private val mobileImage: List<MobileImageModel>) :
     override fun onBindViewHolder(holder: MobileImageViewHolder, position: Int) {
         holder.bind(mobileImage[position])
     }
-
 }
 
 class MobileImageViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
@@ -32,20 +30,17 @@ class MobileImageViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
     private val iImage: ImageView = itemView.findViewById(R.id.imageView)
 
-
     fun bind(model: MobileImageModel) {
 
         var image = model.url
-
         if(model.url.startsWith("www")){
-            image = "https://${image}"
+            image = "https://$image"
         }
 
         Picasso.get()
             .load(image)
             .placeholder(R.mipmap.ic_launcher)
             .into(iImage)
-
     }
 
 }

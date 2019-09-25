@@ -9,17 +9,22 @@ import retrofit2.Response
 
 class MobileListPresenter(val view: MobileInterface, private val service: MobileApiService) {
 
+    var list: List<MobileModel> = listOf()
+
+    fun addData(model: List<MobileModel>) {
+        list = model
+    }
+
     fun getMobileApi() {
-        // เป็นประเภทที่ต้อง callback
         service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
-            // เช่นกรณีเน็ตหลุด
             override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
                 println("Failed :")
             }
-
             override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
                 response.body()?.apply {
                     if (this.isNotEmpty()) {
+
+                        addData(this)
                         view.setMobile(this)
                     }
                 }
@@ -29,64 +34,17 @@ class MobileListPresenter(val view: MobileInterface, private val service: Mobile
         })
     }
 
-
     fun getMobileHighToLow() {
-        service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
-            // เช่นกรณีเน็ตหลุด
-            override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
-                println("Failed :")
-            }
 
-            override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
-                response.body()?.apply {
-                    if (this.isNotEmpty()) {
-                        view.setMobile(this.sortedByDescending { it.price })
-
-                    }
-                }
-
-            }
-
-        })
+        view.setMobile(list.sortedByDescending { it.price })
     }
 
     fun getMobileSortLowToHigh() {
-        service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
-            // เช่นกรณีเน็ตหลุด
-            override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
-                println("Failed :")
-            }
-
-            override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
-                response.body()?.apply {
-                    if (this.isNotEmpty()) {
-                        view.setMobile(this.sortedBy { it.price })
-
-                    }
-                }
-
-            }
-
-        })
+        view.setMobile(list.sortedBy { it.price })
     }
 
     fun getMobileSortRating() {
-        service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
-            // เช่นกรณีเน็ตหลุด
-            override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
-                println("Failed :")
-            }
-
-            override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
-                response.body()?.apply {
-                    if (this.isNotEmpty()) {
-                        view.setMobile(this.sortedByDescending { it.rating })
-                    }
-                }
-
-            }
-
-        })
+        view.setMobile(list.sortedByDescending { it.rating })
     }
 
 

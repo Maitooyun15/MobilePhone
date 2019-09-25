@@ -15,15 +15,19 @@ class MobileAdapter(private val listener: OnMobileClickListener, private val mob
     RecyclerView.Adapter<MobileViewHolder>() {
 
     private var mobileList = listOf<MobileModel>()
+    private var fav: ArrayList<MobileModel> = arrayListOf()
 
-    fun addMobile(list: List<MobileModel>) {
-        this.mobileList = list
-        this.notifyDataSetChanged()
+    init {
+        mobile?.getObject("model")?.let { fav.addAll(it) }
     }
 
+    fun addMobile(list: List<MobileModel>) {
+        mobileList = list
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MobileViewHolder {
-        return MobileViewHolder(parent, mobile)
+        return MobileViewHolder(parent, mobile, fav)
     }
 
     override fun getItemCount(): Int {
@@ -32,14 +36,14 @@ class MobileAdapter(private val listener: OnMobileClickListener, private val mob
 
     override fun onBindViewHolder(holder: MobileViewHolder, position: Int) {
         holder.bind(mobileList[position], listener)
-
     }
 
 }
 
-class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(R.layout.item_mobile, parent, false)
-) {
+class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var list: ArrayList<MobileModel>) :
+    RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_mobile, parent, false)
+    ) {
 
     private val iImage: ImageView = itemView.findViewById(R.id.imagesMobile)
     private val txtName: TextView = itemView.findViewById(R.id.namesMobile)
@@ -48,9 +52,7 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?) : Recyc
     private val txtRating: TextView = itemView.findViewById(R.id.rating)
     private val btnFavorite: ImageButton = itemView.findViewById(R.id.imageButton3)
 
-
     fun bind(model: MobileModel, listener: OnMobileClickListener) {
-
 
         Picasso.get()
             .load(model.imageUrl)
@@ -61,30 +63,44 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?) : Recyc
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 
+        val id: ArrayList<Int> = arrayListOf()
+        var saveFavorite = mobile?.getObject("model")
 
-        var check = model.chacked
-
-
-        btnFavorite.setOnClickListener {
-
-            check = if (!check) {
-                btnFavorite.setBackgroundResource(R.drawable.heartfull)
-                model.chacked = true
-                listener.onFavoriteClick(model)
-                mobile?.putObject(model.id.toString(), model)
-                true
-
-            } else {
-                btnFavorite.setBackgroundResource(R.drawable.heart)
-                model.chacked = false
-                listener.onFavoriteClick(model)
-                mobile?.putObject(model.id.toString(), model)
-                false
+        if (saveFavorite != null) {
+            for (i in saveFavorite) {
+                id.add(i.id)
             }
         }
+        println("list id " + id.toString())
 
+
+        if (id.contains(model.id)) {
+            model.chacked = true
+            println("check " + model.chacked)
+            btnFavorite.setBackgroundResource(R.drawable.heartfull)
+        } else {
+            model.chacked = false
+            btnFavorite.setBackgroundResource(R.drawable.heart)
+        }
+
+        btnFavorite.setOnClickListener {
+            if (model.chacked) {
+                btnFavorite.setBackgroundResource(R.drawable.heart)
+                model.chacked = false
+            } else {
+                btnFavorite.setBackgroundResource(R.drawable.heartfull)
+                model.chacked = true
+                list.add(model)
+                mobile?.putObject("model", list)
+            }
+            if (model.chacked) {
+                listener.onFavoriteClick(model)
+            } else {
+                listener.onRemoveHeart(model)
+            }
+
+        }
         itemView.setOnClickListener { listener.onMobileClick(model) }
-
     }
 
 
@@ -93,5 +109,7 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?) : Recyc
 interface OnMobileClickListener {
     fun onMobileClick(mobile: MobileModel)
     fun onFavoriteClick(favorite: MobileModel)
+    fun onRemoveClick(unFav: ArrayList<MobileModel>)
+    fun onRemoveHeart(remove: MobileModel)
 }
 
