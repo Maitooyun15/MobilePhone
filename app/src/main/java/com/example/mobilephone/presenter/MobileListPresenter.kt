@@ -1,5 +1,6 @@
 package com.example.mobilephone.presenter
 
+import com.example.mobilephone.ModelPreferences
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.service.MobileApiService
 import com.example.mobilephone.view.MobileInterface
@@ -15,17 +16,27 @@ class MobileListPresenter(val view: MobileInterface, private val service: Mobile
         list = model
     }
 
-    fun getMobileApi() {
+    fun getMobileApi(heart: ModelPreferences) {
         service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
             override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
                 println("Failed :")
             }
+
             override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
                 response.body()?.apply {
                     if (this.isNotEmpty()) {
+                        var fav = heart.getObject("model")
 
-                        addData(this)
-                        view.setMobile(this)
+                        for (i in fav) {
+                            for (j in this) {
+                                if (i.id.equals(j.id)) {
+                                    j.chacked = true
+                                    addData(this)
+                                    view.setMobile(this)
+                                }
+                            }
+                        }
+
                     }
                 }
 

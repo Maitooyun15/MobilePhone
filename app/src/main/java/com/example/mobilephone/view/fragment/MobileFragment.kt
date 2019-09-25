@@ -83,12 +83,13 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
         super.onViewCreated(view, savedInstanceState)
         context?.let {
             remove = ModelPreferences(it)
+            presenter.getMobileApi(remove)
         }
         mobileAdapter = MobileAdapter(this, remove)
         rvMobile.adapter = mobileAdapter
         rvMobile.layoutManager = LinearLayoutManager(context)
         rvMobile.itemAnimator = DefaultItemAnimator()
-        presenter.getMobileApi()
+
     }
 }
 

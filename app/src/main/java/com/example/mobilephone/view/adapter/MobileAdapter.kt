@@ -63,23 +63,20 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 
-        val id: ArrayList<Int> = arrayListOf()
-        var saveFavorite = mobile?.getObject("model")
+//        val id: ArrayList<Int> = arrayListOf()
+//        var saveFavorite = mobile?.getObject("model")
+//
+//        if (saveFavorite != null) {
+//            for (i in saveFavorite) {
+//                if(!id.contains(i.id))
+//                id.add(i.id)
+//            }
+//        }
+//        println("list id " + id.toString())
 
-        if (saveFavorite != null) {
-            for (i in saveFavorite) {
-                id.add(i.id)
-            }
-        }
-        println("list id " + id.toString())
-
-
-        if (id.contains(model.id)) {
-            model.chacked = true
-            println("check " + model.chacked)
+        if (model.chacked == true) {
             btnFavorite.setBackgroundResource(R.drawable.heartfull)
         } else {
-            model.chacked = false
             btnFavorite.setBackgroundResource(R.drawable.heart)
         }
 
@@ -90,8 +87,11 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
             } else {
                 btnFavorite.setBackgroundResource(R.drawable.heartfull)
                 model.chacked = true
-                list.add(model)
+                if (!list.contains(model)) {
+                    list.add(model)
+                }
                 mobile?.putObject("model", list)
+
             }
             if (model.chacked) {
                 listener.onFavoriteClick(model)
