@@ -30,8 +30,10 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
     private val favoriteAdapter: FavoriteAdapter by lazy { FavoriteAdapter(this) }
     private lateinit var presenter: FavoritePresenter
     private var onListener: onListener? = null
+    private var remove: ModelPreferences = ModelPreferences(context)
 
     override fun onRemoveClick(unFav: ArrayList<MobileModel>) {
+        remove?.putObject("model", unFav)
         onListener?.onRemoveFavorite(unFav)
     }
 
@@ -61,8 +63,8 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         context?.let { context ->
-            var shareFav = ModelPreferences(context)
-            presenter = FavoritePresenter(this, shareFav)
+            remove = ModelPreferences(context)
+            presenter = FavoritePresenter(this, remove)
             presenter.getFavorite()
         }
 
@@ -72,10 +74,10 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
         val swipeHandler = object : SwipeToDeleteCallback(context!!) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = rvFavorite.adapter as FavoriteAdapter
+                presenter.data.removeAt(viewHolder.adapterPosition)
                 adapter.removeAt(viewHolder.adapterPosition)
             }
         }
-
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(rvFavorite)
     }
@@ -86,6 +88,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
 
     fun sortLowToHigh() {
         presenter.getSortLowToHigh()
+
     }
 
     fun sortHighToLow() {
@@ -97,35 +100,28 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
     }
 
     fun addFavorite(fav: MobileModel, select: Int) {
+        favoriteAdapter.addItem(fav)
+        presenter.data.add(fav)
 
         when (select) {
             0 -> {
-                favoriteAdapter.addItem(fav)
-                presenter.data.add(fav)
                 presenter.getSortLowToHigh()
 
             }
             1 -> {
-                favoriteAdapter.addItem(fav)
-                presenter.data.add(fav)
                 presenter.getSortHighToLow()
             }
             2 -> {
-                favoriteAdapter.addItem(fav)
-                presenter.data.add(fav)
+
                 presenter.getSortRating()
             }
-            else -> {
-                favoriteAdapter.addItem(fav)
-                presenter.data.add(fav)
-            }
+
         }
-
-
     }
 
     fun removeHeart(remove: MobileModel) {
-        favoriteAdapter.removeHeart(remove)
+        favoriteAdapter.removeHeart(remove, this.remove)
+        presenter.data.remove(remove)
     }
 }
 

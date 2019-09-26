@@ -63,41 +63,42 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 
-//        val id: ArrayList<Int> = arrayListOf()
-//        var saveFavorite = mobile?.getObject("model")
-//
-//        if (saveFavorite != null) {
-//            for (i in saveFavorite) {
-//                if(!id.contains(i.id))
-//                id.add(i.id)
-//            }
-//        }
-//        println("list id " + id.toString())
+        val id: ArrayList<Int> = arrayListOf()
+        var saveFavorite = mobile?.getObject("model")
 
-        if (model.chacked == true) {
+        if (saveFavorite != null) {
+            for (i in saveFavorite) {
+                if (!id.contains(i.id))
+                    id.add(i.id)
+            }
+        }
+        println("list id " + id.toString())
+
+        if (id.contains(model.id)) {
             btnFavorite.setBackgroundResource(R.drawable.heartfull)
+            model.checked = true
+
         } else {
             btnFavorite.setBackgroundResource(R.drawable.heart)
+            model.checked = false
         }
 
         btnFavorite.setOnClickListener {
-            if (model.chacked) {
+            if (model.checked) {
+                listener.onRemoveHeart(model)
                 btnFavorite.setBackgroundResource(R.drawable.heart)
-                model.chacked = false
+                model.checked = false
             } else {
                 btnFavorite.setBackgroundResource(R.drawable.heartfull)
-                model.chacked = true
+                model.checked = true
                 if (!list.contains(model)) {
                     list.add(model)
                 }
+                listener.onFavoriteClick(model)
                 mobile?.putObject("model", list)
 
             }
-            if (model.chacked) {
-                listener.onFavoriteClick(model)
-            } else {
-                listener.onRemoveHeart(model)
-            }
+
 
         }
         itemView.setOnClickListener { listener.onMobileClick(model) }
@@ -112,4 +113,3 @@ interface OnMobileClickListener {
     fun onRemoveClick(unFav: ArrayList<MobileModel>)
     fun onRemoveHeart(remove: MobileModel)
 }
-

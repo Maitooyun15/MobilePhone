@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilephone.ModelPreferences
 import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
 import com.squareup.picasso.Picasso
@@ -32,9 +33,10 @@ class FavoriteAdapter(
         notifyDataSetChanged()
     }
 
-    fun removeHeart(model: MobileModel) {
+    fun removeHeart(model: MobileModel, removePref: ModelPreferences) {
         mobileList.remove(model)
-        listener.onRemoveClick(mobileList)
+//        listener.onRemoveClick(mobileList)
+        removePref.putObject("model", mobileList)
         notifyDataSetChanged()
     }
 

@@ -17,6 +17,9 @@ class MainActivity : AppCompatActivity(), onListener {
     private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
     lateinit var homeList: List<FragmentModel>
 
+    private val fragmentMobile = MobileFragment.newInstance()
+    private val fragmentFavorite = FavoriteFragment.newInstance()
+
 
     companion object {
         const val SORT1 = "Price low to high"
@@ -32,48 +35,30 @@ class MainActivity : AppCompatActivity(), onListener {
 
     private fun setView() {
         homeList = listOf(
-            FragmentModel("Mobile List", MobileFragment.newInstance().apply { setOnListener(this@MainActivity) }),
-            FragmentModel("Favorite List", FavoriteFragment.newInstance().apply { setOnListener(this@MainActivity) })
+            FragmentModel("Mobile List", fragmentMobile.apply { setOnListener(this@MainActivity) }),
+            FragmentModel("Favorite List", fragmentFavorite.apply { setOnListener(this@MainActivity) })
         )
         //set listener ให้เมนรู้จักในหน้า fragment ต่างๆ
 
         btnSort.setOnClickListener {
             val listItems = arrayOf(SORT1, SORT2, SORT3)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
-            val fragment = sectionsPagerAdapter.getItem(0)
-            val fragmentTwo = sectionsPagerAdapter.getItem(1)
+
 
             mBuilder.setSingleChoiceItems(listItems, check) { dialogInterface, i ->
                 check = i
                 when (i) {
                     0 -> {
-                        if (fragment is MobileFragment) {
-                            fragment.sortLowToHigh()
-
-
-                        }
-                        if (fragmentTwo is FavoriteFragment) {
-                            fragmentTwo.sortLowToHigh()
-
-                        }
-
+                        fragmentMobile.sortLowToHigh()
+                        fragmentFavorite.sortLowToHigh()
                     }
                     1 -> {
-                        if (fragment is MobileFragment) {
-                            fragment.sortHighToLow()
-                        }
-                        if (fragmentTwo is FavoriteFragment) {
-                            fragmentTwo.sortHighToLow()
-                        }
-
+                        fragmentMobile.sortHighToLow()
+                        fragmentFavorite.sortHighToLow()
                     }
                     2 -> {
-                        if (fragment is MobileFragment) {
-                            fragment.sortRating()
-                        }
-                        if (fragmentTwo is FavoriteFragment) {
-                            fragmentTwo.sortRating()
-                        }
+                        fragmentMobile.sortRating()
+                        fragmentFavorite.sortRating()
 
                     }
                 }
@@ -90,13 +75,12 @@ class MainActivity : AppCompatActivity(), onListener {
     }
 
     override fun onFavorite(favorite: MobileModel) {
-        val a = homeList[1].fragment as FavoriteFragment
-        a.addFavorite(favorite, check)
+        fragmentFavorite.addFavorite(favorite, check)
     }
 
     override fun onRemoveFavorite(unFav: ArrayList<MobileModel>) {
         val b = homeList[0].fragment as MobileFragment
-        b.onRemoveClick(unFav)
+//        b.onRemoveClick(unFav)
         b.notifyto()
     }
 
