@@ -77,16 +77,6 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 
-        val id: ArrayList<Int> = arrayListOf()
-        var saveFavorite = mobile?.getObject("model")
-
-//        if (saveFavorite != null) {
-//            for (i in saveFavorite) {
-//                if (!id.contains(i.id))
-//                    id.add(i.id)
-//            }
-//        }
-//        println("list id " + id.toString())
 
         if (model.checked) {
             btnFavorite.setBackgroundResource(R.drawable.heartfull)

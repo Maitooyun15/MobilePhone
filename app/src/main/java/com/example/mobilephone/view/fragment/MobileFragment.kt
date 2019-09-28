@@ -1,7 +1,6 @@
 package com.example.mobilephone.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,6 +58,11 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
 
     override fun setMobile(mobileModelList: List<MobileModel>) {
         mobileAdapter.addMobile(mobileModelList)
+        if (mobileModelList.isNotEmpty()) {
+
+            loading.visibility = View.GONE
+        }
+
     }
 
     fun sortLowToHigh() {
@@ -74,10 +78,7 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
     }
 
     fun notifyto(un: MobileModel) {
-        //  mobileAdapter.notifyDataSetChanged()
         mobileAdapter.updateFavorite(un)
-        // mobileAdapter.notifyDataSetChanged()
-        //  Log.e("test", "remove")
     }
 
 
