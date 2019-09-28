@@ -59,10 +59,8 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
     override fun setMobile(mobileModelList: List<MobileModel>) {
         mobileAdapter.addMobile(mobileModelList)
         if (mobileModelList.isNotEmpty()) {
-
             loading.visibility = View.GONE
         }
-
     }
 
     fun sortLowToHigh() {
@@ -80,7 +78,6 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
     fun notifyto(un: MobileModel) {
         mobileAdapter.updateFavorite(un)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

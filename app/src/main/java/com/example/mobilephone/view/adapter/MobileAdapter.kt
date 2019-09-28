@@ -29,9 +29,7 @@ class MobileAdapter(private val listener: OnMobileClickListener, private val mob
     }
 
     fun updateFavorite(removeFav: MobileModel) {
-
         fav.remove(removeFav)
-
         mobileList.forEach {
             if (it.id == removeFav.id) {
                 it.checked = false
