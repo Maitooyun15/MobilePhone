@@ -78,10 +78,9 @@ class MainActivity : AppCompatActivity(), onListener {
         fragmentFavorite.addFavorite(favorite, check)
     }
 
-    override fun onRemoveFavorite(unFav: ArrayList<MobileModel>) {
+    override fun onRemoveFavorite(unFav: MobileModel) {
         val b = homeList[0].fragment as MobileFragment
-//        b.onRemoveClick(unFav)
-        b.notifyto()
+        b.notifyto(unFav)
     }
 
     override fun onRemoveHeart(model: MobileModel) {
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity(), onListener {
 
 interface onListener {
     fun onFavorite(favorite: MobileModel)
-    fun onRemoveFavorite(unFav: ArrayList<MobileModel>)
+    fun onRemoveFavorite(unFav: MobileModel)
     fun onRemoveHeart(model: MobileModel)
 }
 

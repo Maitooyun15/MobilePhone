@@ -1,6 +1,7 @@
 package com.example.mobilephone
 
 import android.content.Context
+import android.util.Log
 import com.example.mobilephone.model.MobileModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -14,9 +15,16 @@ class ModelPreferences(c: Context?) {
     private val gson = GsonBuilder().create()
     private lateinit var a: ArrayList<MobileModel>
 
+
     fun putObject(key: String, y: ArrayList<MobileModel>) {
         var into = gson.toJson(y)
+        Log.e("test", "เซฟไฟล์" + y.map { it.id }.toString())
         editor?.putString(key, into)?.apply()
+
+
+
+        println("List" + y)
+        // editor?.putString(key, into)?.apply()
     }
 
     fun getObject(key: String): ArrayList<MobileModel> {
@@ -27,6 +35,8 @@ class ModelPreferences(c: Context?) {
         } catch (ex: RuntimeException) {
             arrayListOf()
         }
+        // val s = a.toMutableSet()
+        //  Log.e("test" , "read " + ArrayList(s).toString())
         return a
     }
 

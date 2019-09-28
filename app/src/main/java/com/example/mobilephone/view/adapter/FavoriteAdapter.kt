@@ -1,5 +1,6 @@
 package com.example.mobilephone.view.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -23,19 +24,47 @@ class FavoriteAdapter(
     }
 
     fun addItem(fav: MobileModel) {
+//        var isAddItem = true
+//        for (i in mobileList) {
+//            if (i.id == fav.id) {
+//                isAddItem = false
+//                break
+//            }
+//        }
+//        if (isAddItem) {
+//            mobileList.add(fav)
+//            notifyDataSetChanged()
+//        }
         mobileList.add(fav)
         notifyDataSetChanged()
+
     }
 
-    fun removeAt(position: Int) {
+    fun removeAt(position: Int, removePref: ModelPreferences) {
+        var removeFav = mobileList[position]
         mobileList.removeAt(position)
-        listener.onRemoveClick(mobileList)
+        Log.e("test", "delete Swipe เหลือ list ที่เหลือ " + mobileList.map { it.id }.toString())
+
+        removePref.putObject("model", mobileList)
+        listener.onRemoveClick(removeFav)
         notifyDataSetChanged()
     }
 
     fun removeHeart(model: MobileModel, removePref: ModelPreferences) {
+        Log.e(
+            "test",
+            "ค่าก่อนลบหัวใจ " + mobileList.map { it.id }.toString() + " model " + model + "  getshare" + removePref.getObject(
+                "model"
+            )
+        )
+
         mobileList.remove(model)
+
+        Log.e("test", "ไซส์" + mobileList.size)
+
+        Log.e("test", "delete Heart เหลือ list ที่เหลือ  " + mobileList.map { it.id }.toString())
 //        listener.onRemoveClick(mobileList)
+
         removePref.putObject("model", mobileList)
         notifyDataSetChanged()
     }
@@ -67,7 +96,7 @@ class FavoriteViewHolder(parent: ViewGroup) :
             .load(model.imageUrl)
             .placeholder(R.mipmap.ic_launcher)
             .into(imageMobile)
-        txtName.text = model.name
+        txtName.text = model.id.toString()
         txtPrice.text = "${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 

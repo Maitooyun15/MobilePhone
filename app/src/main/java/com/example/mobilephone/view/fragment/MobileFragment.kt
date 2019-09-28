@@ -36,12 +36,9 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
         onListener?.onRemoveHeart(remove)
     }
 
-    override fun onRemoveClick(unFav: ArrayList<MobileModel>) {
-        // remove?.putObject("model", unFav)
-        mobileAdapter.notifyDataSetChanged()
-        //  mobileAdapter.notifyDataSetChanged()
+    override fun onRemoveClick(unFav: MobileModel) {
+        //presenter.addData(unFav)
 
-        //  println("Remove " + unFav)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -76,9 +73,11 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
         presenter.getMobileSortRating()
     }
 
-    fun notifyto() {
-        mobileAdapter.notifyDataSetChanged()
-        Log.e("test", "remove")
+    fun notifyto(un: MobileModel) {
+        //  mobileAdapter.notifyDataSetChanged()
+        mobileAdapter.updateFavorite(un)
+        // mobileAdapter.notifyDataSetChanged()
+        //  Log.e("test", "remove")
     }
 
 
@@ -86,7 +85,7 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
         super.onViewCreated(view, savedInstanceState)
         context?.let {
             remove = ModelPreferences(it)
-            presenter.getMobileApi()
+            presenter.getMobileApi(remove)
         }
         mobileAdapter = MobileAdapter(this, remove)
         rvMobile.adapter = mobileAdapter

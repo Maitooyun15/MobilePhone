@@ -1,5 +1,6 @@
 package com.example.mobilephone.view.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -19,10 +20,23 @@ class MobileAdapter(private val listener: OnMobileClickListener, private val mob
 
     init {
         mobile?.getObject("model")?.let { fav.addAll(it) }
+        Log.e("test", "ค่าที่มาก่อน " + fav.map { it.id }.toString())
     }
 
     fun addMobile(list: List<MobileModel>) {
         mobileList = list
+        notifyDataSetChanged()
+    }
+
+    fun updateFavorite(removeFav: MobileModel) {
+
+        fav.remove(removeFav)
+
+        mobileList.forEach {
+            if (it.id == removeFav.id) {
+                it.checked = false
+            }
+        }
         notifyDataSetChanged()
     }
 
@@ -58,7 +72,7 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
             .load(model.imageUrl)
             .placeholder(R.mipmap.ic_launcher)
             .into(iImage)
-        txtName.text = model.name
+        txtName.text = model.id.toString()
         txtDescription.text = model.description
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
@@ -66,40 +80,38 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
         val id: ArrayList<Int> = arrayListOf()
         var saveFavorite = mobile?.getObject("model")
 
-        if (saveFavorite != null) {
-            for (i in saveFavorite) {
-                if (!id.contains(i.id))
-                    id.add(i.id)
-            }
-        }
-        println("list id " + id.toString())
+//        if (saveFavorite != null) {
+//            for (i in saveFavorite) {
+//                if (!id.contains(i.id))
+//                    id.add(i.id)
+//            }
+//        }
+//        println("list id " + id.toString())
 
-        if (id.contains(model.id)) {
+        if (model.checked) {
             btnFavorite.setBackgroundResource(R.drawable.heartfull)
-            model.checked = true
-
         } else {
             btnFavorite.setBackgroundResource(R.drawable.heart)
-            model.checked = false
         }
 
         btnFavorite.setOnClickListener {
             if (model.checked) {
                 listener.onRemoveHeart(model)
-                btnFavorite.setBackgroundResource(R.drawable.heart)
+
+                list.remove(model)
                 model.checked = false
+                btnFavorite.setBackgroundResource(R.drawable.heart)
+
             } else {
                 btnFavorite.setBackgroundResource(R.drawable.heartfull)
                 model.checked = true
-                if (!list.contains(model)) {
-                    list.add(model)
-                }
-                listener.onFavoriteClick(model)
+                list.add(model)
+                list.toMutableSet()
+                Log.e("test", "ค่าตอนแอด" + list.toString())
                 mobile?.putObject("model", list)
+                listener.onFavoriteClick(model)
 
             }
-
-
         }
         itemView.setOnClickListener { listener.onMobileClick(model) }
     }
@@ -110,6 +122,6 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
 interface OnMobileClickListener {
     fun onMobileClick(mobile: MobileModel)
     fun onFavoriteClick(favorite: MobileModel)
-    fun onRemoveClick(unFav: ArrayList<MobileModel>)
+    fun onRemoveClick(unFav: MobileModel)
     fun onRemoveHeart(remove: MobileModel)
 }
