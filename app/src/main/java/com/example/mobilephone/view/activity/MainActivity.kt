@@ -1,5 +1,6 @@
 package com.example.mobilephone.view.activity
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -7,16 +8,15 @@ import com.example.mobilephone.R
 import com.example.mobilephone.model.FragmentModel
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.view.adapter.SectionsPagerAdapter
+import com.example.mobilephone.view.contract.MainActivityInterface
 import com.example.mobilephone.view.fragment.FavoriteFragment
 import com.example.mobilephone.view.fragment.MobileFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), onListener {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     private var check = -1
     private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
-    lateinit var homeList: List<FragmentModel>
-
     private val fragmentMobile = MobileFragment.newInstance()
     private val fragmentFavorite = FavoriteFragment.newInstance()
 
@@ -34,16 +34,14 @@ class MainActivity : AppCompatActivity(), onListener {
     }
 
     private fun setView() {
-        homeList = listOf(
-            FragmentModel("Mobile List", fragmentMobile.apply { setOnListener(this@MainActivity) }),
-            FragmentModel("Favorite List", fragmentFavorite.apply { setOnListener(this@MainActivity) })
+        var homeList = listOf(
+            FragmentModel(getString(R.string.tab_mobile), fragmentMobile.apply { setOnListener(this@MainActivity) }),
+            FragmentModel(getString(R.string.tab_favorite), fragmentFavorite.apply { setOnListener(this@MainActivity) })
         )
-        //set listener ให้เมนรู้จักในหน้า fragment ต่างๆ
 
         btnSort.setOnClickListener {
             val listItems = arrayOf(SORT1, SORT2, SORT3)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
-
 
             mBuilder.setSingleChoiceItems(listItems, check) { dialogInterface, i ->
                 check = i
@@ -68,31 +66,23 @@ class MainActivity : AppCompatActivity(), onListener {
             mDialog.show()
         }
 
-        sectionsPagerAdapter =
-            SectionsPagerAdapter(homeList, supportFragmentManager)
-        view_pager.adapter = sectionsPagerAdapter
-        tabs.setupWithViewPager(view_pager)
+        sectionsPagerAdapter = SectionsPagerAdapter(homeList, supportFragmentManager)
+        viewPager.adapter = sectionsPagerAdapter
+        tabs.setupWithViewPager(viewPager)
     }
 
-    override fun onFavorite(favorite: MobileModel) {
+    override fun onAddFavorite(favorite: MobileModel) {
         fragmentFavorite.addFavorite(favorite, check)
     }
 
-    override fun onRemoveFavorite(unFav: MobileModel) {
-        val b = homeList[0].fragment as MobileFragment
-        b.notifyto(unFav)
+    override fun onRemoveSwipeFavorite(unFav: MobileModel) {
+        fragmentMobile.updateUnfavorite(unFav)
     }
 
-    override fun onRemoveHeart(model: MobileModel) {
-        val a = homeList[1].fragment as FavoriteFragment
-        a.removeHeart(model)
+    override fun onRemoveHeartFavorite(unFav: MobileModel) {
+        fragmentFavorite.removeHeart(unFav)
     }
 
 }
 
-interface onListener {
-    fun onFavorite(favorite: MobileModel)
-    fun onRemoveFavorite(unFav: MobileModel)
-    fun onRemoveHeart(model: MobileModel)
-}
 

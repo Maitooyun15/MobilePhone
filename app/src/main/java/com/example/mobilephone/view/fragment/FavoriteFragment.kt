@@ -5,54 +5,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobilephone.ModelPreferences
 import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
+import com.example.mobilephone.model.ModelPreferences
 import com.example.mobilephone.presenter.FavoritePresenter
 import com.example.mobilephone.presenter.SwipeToDeleteCallback
 import com.example.mobilephone.view.activity.DetailMobileActivity
-import com.example.mobilephone.view.activity.onListener
 import com.example.mobilephone.view.adapter.FavoriteAdapter
-import com.example.mobilephone.view.adapter.OnMobileClickListener
+import com.example.mobilephone.view.contract.FavoriteInterface
+import com.example.mobilephone.view.contract.MainActivityInterface
 import kotlinx.android.synthetic.main.fragment_favorite.*
 
-class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
-    // ไม่เอา
-    override fun onRemoveHeart(remove: MobileModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    // อย่าลืมเก็บค่า
-    private val favoriteAdapter: FavoriteAdapter by lazy { FavoriteAdapter(this) }
+class FavoriteFragment : Fragment(), FavoriteInterface, FavoriteInterface.OnClickFavoriteList {
+    private lateinit var shareFavorite: ModelPreferences
+    private val favoriteAdapter: FavoriteAdapter  by lazy { FavoriteAdapter(this, shareFavorite) }
     private lateinit var presenter: FavoritePresenter
-    private var onListener: onListener? = null
-    private var remove: ModelPreferences = ModelPreferences(context)
-
-    override fun onRemoveClick(unFav: MobileModel) {
-        presenter.data.remove(unFav)
-        onListener?.onRemoveFavorite(unFav)
-    }
-
-    fun setOnListener(onListener: onListener) {
-        this.onListener = onListener
-    }
-
-    // ไม่ใช้
-    override fun onFavoriteClick(favorite: MobileModel) {
-        // onListener?.onFavorite(favorite)
-        //   Log.e("test", "test")
-    }
-
-    override fun onMobileClick(mobileModelList: MobileModel) {
-        DetailMobileActivity.startActivity(context, mobileModelList)
-    }
+    private var onListener: MainActivityInterface? = null
 
     companion object {
         fun newInstance(): FavoriteFragment =
             FavoriteFragment()
+    }
+
+    fun setOnListener(onListener: MainActivityInterface) {
+        this.onListener = onListener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -62,37 +42,44 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         context?.let { context ->
-            remove = ModelPreferences(context)
-            presenter = FavoritePresenter(this, remove)
+            shareFavorite = ModelPreferences(context)
+            presenter = FavoritePresenter(this, shareFavorite)
             presenter.getFavorite()
         }
 
         rvFavorite.adapter = favoriteAdapter
         rvFavorite.layoutManager = LinearLayoutManager(context)
-        setUp()
+        rvFavorite.itemAnimator = DefaultItemAnimator()
+        swipeSetup()
     }
 
-    private fun setUp() {
+    override fun onFavoriteDetailClick(favorite: MobileModel) {
+        DetailMobileActivity.startActivity(context, favorite)
+    }
+
+    override fun setMobile(favoriteList: List<MobileModel>) {
+        favoriteAdapter.favoriteList(ArrayList(favoriteList))
+    }
+
+
+    override fun onSwipeRemove(unFav: MobileModel) {
+        presenter.readFavorite.remove(unFav)
+        onListener?.onRemoveSwipeFavorite(unFav)
+    }
+
+    private fun swipeSetup() {
         val swipeHandler = object : SwipeToDeleteCallback(context!!) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = rvFavorite.adapter as FavoriteAdapter
-                // println("9999" + viewHolder.adapterPosition)
-                //  presenter.data.removeAt(viewHolder.adapterPosition)
-                adapter.removeAt(viewHolder.adapterPosition, remove)
-                // println(  adapter.removeAt(viewHolder.adapterPosition))
+                adapter.removeAt(viewHolder.adapterPosition)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(rvFavorite)
     }
 
-    override fun setMobile(mobileModelList: List<MobileModel>) {
-        favoriteAdapter.addFavorite(ArrayList(mobileModelList))
-    }
-
     fun sortLowToHigh() {
         presenter.getSortLowToHigh()
-
     }
 
     fun sortHighToLow() {
@@ -104,9 +91,8 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
     }
 
     fun addFavorite(fav: MobileModel, select: Int) {
-        favoriteAdapter.addItem(fav)
-        presenter.data.add(fav)
-
+        favoriteAdapter.addFavorite(fav)
+        presenter.readFavorite.add(fav)
 
         when (select) {
             0 -> {
@@ -124,11 +110,8 @@ class FavoriteFragment : Fragment(), FavoriteInterface, OnMobileClickListener {
     }
 
     fun removeHeart(remove: MobileModel) {
-        favoriteAdapter.removeHeart(remove, this.remove)
-        presenter.data.remove(remove)
+        favoriteAdapter.removeHeart(remove)
+        presenter.readFavorite.remove(remove)
     }
 }
 
-interface FavoriteInterface {
-    fun setMobile(mobileModelList: List<MobileModel>)
-}

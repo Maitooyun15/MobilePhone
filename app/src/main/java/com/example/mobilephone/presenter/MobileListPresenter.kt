@@ -1,31 +1,30 @@
 package com.example.mobilephone.presenter
 
-import com.example.mobilephone.ModelPreferences
 import com.example.mobilephone.model.MobileModel
-import com.example.mobilephone.service.MobileApiService
-import com.example.mobilephone.view.MobileInterface
+import com.example.mobilephone.model.ModelPreferences
+import com.example.mobilephone.service.MobilePhoneManager.Companion.service
+import com.example.mobilephone.view.contract.MobileInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MobileListPresenter(val view: MobileInterface, private val service: MobileApiService) {
+class MobileListPresenter(val view: MobileInterface, shareFav: ModelPreferences) {
 
     var list: List<MobileModel> = listOf()
+    var addFav: ArrayList<MobileModel> = shareFav.getObject("model")
 
-    fun addData(model: List<MobileModel>) {
-        list = model
+    fun addData(mobileModel: List<MobileModel>) {
+        list = mobileModel
     }
 
-
-    fun getMobileApi(remove: ModelPreferences) {
+    fun getMobileApi() {
         service.getMobileList().enqueue(object : Callback<List<MobileModel>> {
             override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
-                println("Failed :")
+                println("Failed")
             }
 
             override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
                 response.body()?.apply {
-                    var addFav: ArrayList<MobileModel> = remove.getObject("model")
                     if (this.isNotEmpty()) {
                         for (i in this) {
                             for (j in addFav) {
@@ -45,7 +44,6 @@ class MobileListPresenter(val view: MobileInterface, private val service: Mobile
     }
 
     fun getMobileHighToLow() {
-
         view.setMobile(list.sortedByDescending { it.price })
     }
 

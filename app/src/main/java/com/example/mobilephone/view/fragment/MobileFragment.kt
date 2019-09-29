@@ -7,60 +7,53 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mobilephone.ModelPreferences
 import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
+import com.example.mobilephone.model.ModelPreferences
 import com.example.mobilephone.presenter.MobileListPresenter
-import com.example.mobilephone.service.MobilePhoneManager
-import com.example.mobilephone.view.MobileInterface
 import com.example.mobilephone.view.activity.DetailMobileActivity
-import com.example.mobilephone.view.activity.onListener
 import com.example.mobilephone.view.adapter.MobileAdapter
-import com.example.mobilephone.view.adapter.OnMobileClickListener
+import com.example.mobilephone.view.contract.MainActivityInterface
+import com.example.mobilephone.view.contract.MobileInterface
 import kotlinx.android.synthetic.main.fragment_mobile.*
 
 
-class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
+class MobileFragment : Fragment(), MobileInterface, MobileInterface.OnClickMobileList {
 
-    private val presenter = MobileListPresenter(this, MobilePhoneManager().createService())
+    private lateinit var presenter: MobileListPresenter
     private lateinit var mobileAdapter: MobileAdapter
-    private var onListener: onListener? = null
-    private lateinit var remove: ModelPreferences
+    private lateinit var shareFavorite: ModelPreferences
+    private var onListener: MainActivityInterface? = null
 
     companion object {
         fun newInstance(): MobileFragment = MobileFragment()
     }
 
     override fun onRemoveHeart(remove: MobileModel) {
-        onListener?.onRemoveHeart(remove)
-    }
-
-    override fun onRemoveClick(unFav: MobileModel) {
-        //presenter.addData(unFav)
-
+        onListener?.onRemoveHeartFavorite(remove)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_mobile, container, false)
     }
 
-    fun setOnListener(onListener: onListener) {
+    fun setOnListener(onListener: MainActivityInterface) {
         this.onListener = onListener
-    }// set listener ให้ นี้รู้จัก main
-
-    override fun onFavoriteClick(favorite: MobileModel) {
-        onListener?.onFavorite(favorite)
-    }// ส่งค่าไปให้ main
-
-    override fun onMobileClick(mobile: MobileModel) {
-        DetailMobileActivity.startActivity(context, mobile)
     }
 
-    override fun setMobile(mobileModelList: List<MobileModel>) {
-        mobileAdapter.addMobile(mobileModelList)
-        if (mobileModelList.isNotEmpty()) {
+    override fun onFavoriteClick(favorite: MobileModel) {
+        onListener?.onAddFavorite(favorite)
+    }
+
+    override fun setMobile(mobileList: List<MobileModel>) {
+        mobileAdapter.mobileList(mobileList)
+        if (mobileList.isNotEmpty()) {
             loading.visibility = View.GONE
         }
+    }
+
+    override fun onMobileDetailClick(mobile: MobileModel) {
+        DetailMobileActivity.startActivity(context, mobile)
     }
 
     fun sortLowToHigh() {
@@ -75,17 +68,18 @@ class MobileFragment : Fragment(), MobileInterface, OnMobileClickListener {
         presenter.getMobileSortRating()
     }
 
-    fun notifyto(un: MobileModel) {
-        mobileAdapter.updateFavorite(un)
+    fun updateUnfavorite(unFav: MobileModel) {
+        mobileAdapter.updateFavorite(unFav)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         context?.let {
-            remove = ModelPreferences(it)
-            presenter.getMobileApi(remove)
+            shareFavorite = ModelPreferences(it)
+            presenter = MobileListPresenter(this, shareFavorite)
+            presenter.getMobileApi()
         }
-        mobileAdapter = MobileAdapter(this, remove)
+        mobileAdapter = MobileAdapter(this, shareFavorite)
         rvMobile.adapter = mobileAdapter
         rvMobile.layoutManager = LinearLayoutManager(context)
         rvMobile.itemAnimator = DefaultItemAnimator()

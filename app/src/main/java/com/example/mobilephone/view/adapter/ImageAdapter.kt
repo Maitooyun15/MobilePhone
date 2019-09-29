@@ -25,7 +25,7 @@ class ImageAdapter(private val mobileImage: List<MobileImageModel>) :
 }
 
 class MobileImageViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(R.layout.list_image, parent, false)
+    LayoutInflater.from(parent.context).inflate(R.layout.item_image, parent, false)
 ) {
 
     private val iImage: ImageView = itemView.findViewById(R.id.imageView)

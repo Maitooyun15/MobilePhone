@@ -1,37 +1,39 @@
 package com.example.mobilephone.view.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobilephone.ModelPreferences
 import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
+import com.example.mobilephone.model.ModelPreferences
+import com.example.mobilephone.view.contract.MobileInterface
 import com.squareup.picasso.Picasso
 
-class MobileAdapter(private val listener: OnMobileClickListener, private val mobile: ModelPreferences?) :
+class MobileAdapter(
+    private val listener: MobileInterface.OnClickMobileList,
+    private var shareFavorite: ModelPreferences?
+) :
     RecyclerView.Adapter<MobileViewHolder>() {
 
     private var mobileList = listOf<MobileModel>()
-    private var fav: ArrayList<MobileModel> = arrayListOf()
+    private var favList: ArrayList<MobileModel> = arrayListOf()
 
     init {
-        mobile?.getObject("model")?.let { fav.addAll(it) }
-        Log.e("test", "ค่าที่มาก่อน " + fav.map { it.id }.toString())
+        shareFavorite?.getObject("model")?.let { favList.addAll(it) }
     }
 
-    fun addMobile(list: List<MobileModel>) {
+    fun mobileList(list: List<MobileModel>) {
         mobileList = list
         notifyDataSetChanged()
     }
 
-    fun updateFavorite(removeFav: MobileModel) {
-        fav.remove(removeFav)
+    fun updateFavorite(unFav: MobileModel) {
+        favList.remove(unFav)
         mobileList.forEach {
-            if (it.id == removeFav.id) {
+            if (it.id == unFav.id) {
                 it.checked = false
             }
         }
@@ -39,7 +41,7 @@ class MobileAdapter(private val listener: OnMobileClickListener, private val mob
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MobileViewHolder {
-        return MobileViewHolder(parent, mobile, fav)
+        return MobileViewHolder(parent, shareFavorite, favList)
     }
 
     override fun getItemCount(): Int {
@@ -52,7 +54,7 @@ class MobileAdapter(private val listener: OnMobileClickListener, private val mob
 
 }
 
-class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var list: ArrayList<MobileModel>) :
+class MobileViewHolder(parent: ViewGroup, var shareFavorite: ModelPreferences?, var favList: ArrayList<MobileModel>) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_mobile, parent, false)
     ) {
@@ -64,7 +66,7 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
     private val txtRating: TextView = itemView.findViewById(R.id.rating)
     private val btnFavorite: ImageButton = itemView.findViewById(R.id.imageButton3)
 
-    fun bind(model: MobileModel, listener: OnMobileClickListener) {
+    fun bind(model: MobileModel, listener: MobileInterface.OnClickMobileList) {
 
         Picasso.get()
             .load(model.imageUrl)
@@ -75,7 +77,6 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 
-
         if (model.checked) {
             btnFavorite.setBackgroundResource(R.drawable.heartfull)
         } else {
@@ -85,31 +86,23 @@ class MobileViewHolder(parent: ViewGroup, var mobile: ModelPreferences?, var lis
         btnFavorite.setOnClickListener {
             if (model.checked) {
                 listener.onRemoveHeart(model)
-
-                list.remove(model)
+                favList.remove(model)
+                shareFavorite?.putObject("model", favList)
                 model.checked = false
                 btnFavorite.setBackgroundResource(R.drawable.heart)
 
             } else {
                 btnFavorite.setBackgroundResource(R.drawable.heartfull)
                 model.checked = true
-                list.add(model)
-                list.toMutableSet()
-                Log.e("test", "ค่าตอนแอด" + list.toString())
-                mobile?.putObject("model", list)
+                favList.add(model)
+                //  favList.toMutableSet()
+                shareFavorite?.putObject("model", favList)
                 listener.onFavoriteClick(model)
 
             }
         }
-        itemView.setOnClickListener { listener.onMobileClick(model) }
+
+        itemView.setOnClickListener { listener.onMobileDetailClick(model) }
     }
 
-
-}
-
-interface OnMobileClickListener {
-    fun onMobileClick(mobile: MobileModel)
-    fun onFavoriteClick(favorite: MobileModel)
-    fun onRemoveClick(unFav: MobileModel)
-    fun onRemoveHeart(remove: MobileModel)
 }

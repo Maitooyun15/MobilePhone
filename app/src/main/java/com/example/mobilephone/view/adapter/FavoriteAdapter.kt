@@ -6,66 +6,40 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobilephone.ModelPreferences
+import com.example.mobilephone.model.ModelPreferences
 import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
+import com.example.mobilephone.view.contract.FavoriteInterface
 import com.squareup.picasso.Picasso
 
 class FavoriteAdapter(
-    private val listener: OnMobileClickListener
+    private val listener: FavoriteInterface.OnClickFavoriteList, private var shareFav: ModelPreferences
 ) :
     RecyclerView.Adapter<FavoriteViewHolder>() {
 
     private var mobileList: ArrayList<MobileModel> = arrayListOf()
 
-    fun addFavorite(list: ArrayList<MobileModel>) {
+    fun favoriteList(list: ArrayList<MobileModel>) {
         mobileList = list
         notifyDataSetChanged()
     }
 
-    fun addItem(fav: MobileModel) {
-//        var isAddItem = true
-//        for (i in mobileList) {
-//            if (i.id == fav.id) {
-//                isAddItem = false
-//                break
-//            }
-//        }
-//        if (isAddItem) {
-//            mobileList.add(fav)
-//            notifyDataSetChanged()
-//        }
+    fun addFavorite(fav: MobileModel) {
         mobileList.add(fav)
         notifyDataSetChanged()
 
     }
 
-    fun removeAt(position: Int, removePref: ModelPreferences) {
+    fun removeAt(position: Int) {
         var removeFav = mobileList[position]
         mobileList.removeAt(position)
-        Log.e("test", "delete Swipe เหลือ list ที่เหลือ " + mobileList.map { it.id }.toString())
-
-        removePref.putObject("model", mobileList)
-        listener.onRemoveClick(removeFav)
+        shareFav.putObject("model", mobileList)
+        listener.onSwipeRemove(removeFav)
         notifyDataSetChanged()
     }
 
-    fun removeHeart(model: MobileModel, removePref: ModelPreferences) {
-        Log.e(
-            "test",
-            "ค่าก่อนลบหัวใจ " + mobileList.map { it.id }.toString() + " model " + model + "  getshare" + removePref.getObject(
-                "model"
-            )
-        )
-
+    fun removeHeart(model: MobileModel) {
         mobileList.remove(model)
-
-        Log.e("test", "ไซส์" + mobileList.size)
-
-        Log.e("test", "delete Heart เหลือ list ที่เหลือ  " + mobileList.map { it.id }.toString())
-//        listener.onRemoveClick(mobileList)
-
-        removePref.putObject("model", mobileList)
         notifyDataSetChanged()
     }
 
@@ -90,7 +64,7 @@ class FavoriteViewHolder(parent: ViewGroup) :
     private val txtPrice: TextView = itemView.findViewById(R.id.priceMobile)
     private val txtRating: TextView = itemView.findViewById(R.id.ratingMobile)
 
-    fun bind(model: MobileModel, listener: OnMobileClickListener) {
+    fun bind(model: MobileModel, listener: FavoriteInterface.OnClickFavoriteList) {
 
         Picasso.get()
             .load(model.imageUrl)
@@ -100,7 +74,7 @@ class FavoriteViewHolder(parent: ViewGroup) :
         txtPrice.text = "${model.price}"
         txtRating.text = "Rating: ${model.rating}"
 
-        itemView.setOnClickListener { listener.onMobileClick(model) }
+        itemView.setOnClickListener { listener.onFavoriteDetailClick(model) }
     }
 }
 

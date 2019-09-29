@@ -1,35 +1,33 @@
 package com.example.mobilephone.presenter
 
-import com.example.mobilephone.ModelPreferences
-import com.example.mobilephone.model.MobileModel
-import com.example.mobilephone.view.fragment.FavoriteInterface
+import com.example.mobilephone.model.ModelPreferences
+import com.example.mobilephone.view.contract.FavoriteInterface
 
 class FavoritePresenter(val view: FavoriteInterface, share: ModelPreferences) {
 
-    var data = share.getObject("model")
-
+    var readFavorite = share.getObject("model")
 
     fun getFavorite() {
-        if (data.isNotEmpty()) {
-            view.setMobile(data.toList())
+        if (readFavorite.isNotEmpty()) {
+            view.setMobile(readFavorite)
         }
     }
 
     fun getSortLowToHigh() {
-        if (data.isNotEmpty()) {
-            view.setMobile(data.sortedBy { it.price })
+        if (readFavorite.isNotEmpty()) {
+            view.setMobile(readFavorite.sortedBy { it.price })
         }
     }
 
     fun getSortHighToLow() {
-        if (data.isNotEmpty()) {
-            view.setMobile(data.toList().sortedByDescending { it.price })
+        if (readFavorite.isNotEmpty()) {
+            view.setMobile(readFavorite.sortedByDescending { it.price })
         }
     }
 
     fun getSortRating() {
-        if (data.isNotEmpty()) {
-            view.setMobile(data.toList().sortedByDescending { it.rating })
+        if (readFavorite.isNotEmpty()) {
+            view.setMobile(readFavorite.sortedByDescending { it.rating })
         }
     }
 
