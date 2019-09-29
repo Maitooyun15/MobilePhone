@@ -3,6 +3,7 @@ package com.example.mobilephone.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_detail_mobile.*
 
 class DetailMobileActivity : AppCompatActivity(), MobileImageInterface {
 
-    private val presenter = MobileImagePresenter(this)
+    private val presenter = MobileImagePresenter(this, MobilePhoneManager().createService())
 
     companion object {
         const val EXTRA_KEY_MODEL = "MODEL"
@@ -59,5 +60,9 @@ class DetailMobileActivity : AppCompatActivity(), MobileImageInterface {
         rvImage.adapter = mobileAdapter
         rvImage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvImage.itemAnimator = DefaultItemAnimator()
+    }
+
+    override fun showErrorMsg(msg: String) {
+        //
     }
 }

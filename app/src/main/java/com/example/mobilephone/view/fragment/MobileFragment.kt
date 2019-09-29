@@ -1,6 +1,7 @@
 package com.example.mobilephone.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.model.ModelPreferences
 import com.example.mobilephone.presenter.MobileListPresenter
+import com.example.mobilephone.service.MobilePhoneManager
 import com.example.mobilephone.view.activity.DetailMobileActivity
 import com.example.mobilephone.view.adapter.MobileAdapter
 import com.example.mobilephone.view.contract.MainActivityInterface
@@ -76,7 +78,7 @@ class MobileFragment : Fragment(), MobileInterface, MobileInterface.OnClickMobil
         super.onViewCreated(view, savedInstanceState)
         context?.let {
             shareFavorite = ModelPreferences(it)
-            presenter = MobileListPresenter(this, shareFavorite)
+            presenter = MobileListPresenter(this, shareFavorite, MobilePhoneManager().createService())
             presenter.getMobileApi()
         }
         mobileAdapter = MobileAdapter(this, shareFavorite)
@@ -84,6 +86,10 @@ class MobileFragment : Fragment(), MobileInterface, MobileInterface.OnClickMobil
         rvMobile.layoutManager = LinearLayoutManager(context)
         rvMobile.itemAnimator = DefaultItemAnimator()
 
+    }
+
+    override fun showErrorMsg(msg: String) {
+        Log.e("error", msg)
     }
 }
 

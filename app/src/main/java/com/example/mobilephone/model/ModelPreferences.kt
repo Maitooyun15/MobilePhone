@@ -8,9 +8,9 @@ import com.google.gson.reflect.TypeToken
 
 class ModelPreferences(c: Context?) {
 
-    private val preferences = c?.getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE)
-    private val editor = preferences?.edit()
-    private val gson = GsonBuilder().create()
+    val preferences = c?.getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE)
+    val editor = preferences?.edit()
+    val gson = GsonBuilder().create()
     private lateinit var mobileList: ArrayList<MobileModel>
 
 

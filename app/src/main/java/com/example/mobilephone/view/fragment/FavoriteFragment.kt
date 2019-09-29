@@ -1,6 +1,7 @@
 package com.example.mobilephone.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.model.ModelPreferences
 import com.example.mobilephone.presenter.FavoritePresenter
-import com.example.mobilephone.presenter.SwipeToDeleteCallback
+import com.example.mobilephone.model.SwipeToDeleteCallback
 import com.example.mobilephone.view.activity.DetailMobileActivity
 import com.example.mobilephone.view.adapter.FavoriteAdapter
 import com.example.mobilephone.view.contract.FavoriteInterface
@@ -112,6 +113,10 @@ class FavoriteFragment : Fragment(), FavoriteInterface, FavoriteInterface.OnClic
     fun removeHeart(remove: MobileModel) {
         favoriteAdapter.removeHeart(remove)
         presenter.readFavorite.remove(remove)
+    }
+
+    override fun showErrorMsg(msg: String) {
+        Log.e("error", msg)
     }
 }
 

@@ -2,13 +2,17 @@ package com.example.mobilephone.presenter
 
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.model.ModelPreferences
-import com.example.mobilephone.service.MobilePhoneManager.Companion.service
+import com.example.mobilephone.service.MobileApiService
 import com.example.mobilephone.view.contract.MobileInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MobileListPresenter(val view: MobileInterface, shareFav: ModelPreferences) {
+class MobileListPresenter(
+    val view: MobileInterface,
+    shareFav: ModelPreferences,
+    private val service: MobileApiService
+) {
 
     var list: List<MobileModel> = listOf()
     var addFav: ArrayList<MobileModel> = shareFav.getObject("model")

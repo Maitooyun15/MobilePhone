@@ -1,4 +1,4 @@
-package com.example.mobilephone.presenter
+package com.example.mobilephone.model
 
 import android.content.Context
 import android.graphics.*

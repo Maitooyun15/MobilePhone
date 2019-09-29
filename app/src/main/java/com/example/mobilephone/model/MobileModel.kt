@@ -21,6 +21,5 @@ data class MobileModel(
     val rating: Double,
     @SerializedName("price")
     val price: Double,
-
     var checked: Boolean = false
 ) : Parcelable

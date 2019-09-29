@@ -5,6 +5,7 @@ import com.example.mobilephone.model.MobileModel
 interface MobileInterface {
 
     fun setMobile(mobileList: List<MobileModel>)
+    fun showErrorMsg(msg: String)
 
     interface OnClickMobileList {
         fun onMobileDetailClick(mobile: MobileModel)
