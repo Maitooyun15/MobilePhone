@@ -41,7 +41,6 @@ class MobileImagePresenterTest {
         verify(service).getMobileById(idImage)
     }
 
-
     @Test
     fun testGetMobileImageApiFailed() {
         //given
@@ -92,11 +91,11 @@ class MobileImagePresenterTest {
     }
 
     @Test
-    fun testGetMobileImageApiResponseBodyBeerModel() {
+    fun testGetMobileImageApiResponseBodyMobileImageModel() {
         //given
         var mobileImageModel = DataModel.getMobileImageId()
         val call = mock<Call<List<MobileImageModel>>>()
-        whenever(service.getMobileById(3)).thenReturn(call)
+        whenever(service.getMobileById(idImage)).thenReturn(call)
         whenever(call.enqueue(any())).thenAnswer {
             it.getArgument<Callback<List<MobileImageModel>>>(0).onResponse(mock(), Response.success(mobileImageModel))
         }
@@ -107,6 +106,4 @@ class MobileImagePresenterTest {
         //then
         verify(view).setImageMobile(eq(mobileImageModel))
     }
-
-
 }
