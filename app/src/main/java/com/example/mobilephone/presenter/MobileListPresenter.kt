@@ -2,6 +2,7 @@ package com.example.mobilephone.presenter
 
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.model.ModelPreferences
+import com.example.mobilephone.model.ModelPreferences.Companion.FAVORITE_KEY
 import com.example.mobilephone.service.MobileApiService
 import com.example.mobilephone.view.contract.MobileInterface
 import retrofit2.Call
@@ -15,7 +16,7 @@ class MobileListPresenter(
 ) {
 
     var list: List<MobileModel> = listOf()
-    var addFav: ArrayList<MobileModel> = shareFav.getObject("model")
+    var addFav: ArrayList<MobileModel> = shareFav.readFavorite(FAVORITE_KEY)
 
     fun addData(mobileModel: List<MobileModel>) {
         list = mobileModel
@@ -26,14 +27,13 @@ class MobileListPresenter(
             override fun onFailure(call: Call<List<MobileModel>>, t: Throwable) {
                 println("Failed")
             }
-
             override fun onResponse(call: Call<List<MobileModel>>, response: Response<List<MobileModel>>) {
                 response.body()?.apply {
                     if (this.isNotEmpty()) {
-                        for (i in this) {
-                            for (j in addFav) {
-                                if (i.id == j.id) {
-                                    i.checked = true
+                        for (mobileApi in this) {
+                            for (addShare in addFav) {
+                                if (mobileApi.id == addShare.id) {
+                                    mobileApi.checked = true
                                 }
                             }
                         }
@@ -41,9 +41,7 @@ class MobileListPresenter(
                         view.setMobile(this)
                     }
                 }
-
             }
-
         })
     }
 
@@ -58,6 +56,4 @@ class MobileListPresenter(
     fun getMobileSortRating() {
         view.setMobile(list.sortedByDescending { it.rating })
     }
-
-
 }

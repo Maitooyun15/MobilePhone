@@ -33,7 +33,7 @@ class MobileImageViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     fun bind(model: MobileImageModel) {
 
         var image = model.url
-        if(model.url.startsWith("www")){
+        if (model.url.startsWith("www")) {
             image = "https://$image"
         }
 
@@ -42,5 +42,4 @@ class MobileImageViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
             .placeholder(R.mipmap.ic_launcher)
             .into(iImage)
     }
-
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.model.ModelPreferences
+import com.example.mobilephone.model.ModelPreferences.Companion.FAVORITE_KEY
 import com.example.mobilephone.view.contract.MobileInterface
 import com.squareup.picasso.Picasso
 
@@ -22,7 +23,7 @@ class MobileAdapter(
     private var favList: ArrayList<MobileModel> = arrayListOf()
 
     init {
-        shareFavorite?.getObject("model")?.let { favList.addAll(it) }
+        shareFavorite?.readFavorite(FAVORITE_KEY)?.let { favList.addAll(it) }
     }
 
     fun mobileList(list: List<MobileModel>) {
@@ -30,7 +31,7 @@ class MobileAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateFavorite(unFav: MobileModel) {
+    fun removeSwipeFavorite(unFav: MobileModel) {
         favList.remove(unFav)
         mobileList.forEach {
             if (it.id == unFav.id) {
@@ -72,7 +73,7 @@ class MobileViewHolder(parent: ViewGroup, var shareFavorite: ModelPreferences?, 
             .load(model.imageUrl)
             .placeholder(R.mipmap.ic_launcher)
             .into(iImage)
-        txtName.text = model.id.toString()
+        txtName.text = model.name
         txtDescription.text = model.description
         txtPrice.text = "Price: $${model.price}"
         txtRating.text = "Rating: ${model.rating}"
@@ -87,7 +88,7 @@ class MobileViewHolder(parent: ViewGroup, var shareFavorite: ModelPreferences?, 
             if (model.checked) {
                 listener.onRemoveHeart(model)
                 favList.remove(model)
-                shareFavorite?.putObject("model", favList)
+                shareFavorite?.saveFavorite(FAVORITE_KEY, favList)
                 model.checked = false
                 btnFavorite.setBackgroundResource(R.drawable.heart)
 
@@ -95,10 +96,8 @@ class MobileViewHolder(parent: ViewGroup, var shareFavorite: ModelPreferences?, 
                 btnFavorite.setBackgroundResource(R.drawable.heartfull)
                 model.checked = true
                 favList.add(model)
-                //  favList.toMutableSet()
-                shareFavorite?.putObject("model", favList)
+                shareFavorite?.saveFavorite(FAVORITE_KEY, favList)
                 listener.onFavoriteClick(model)
-
             }
         }
 

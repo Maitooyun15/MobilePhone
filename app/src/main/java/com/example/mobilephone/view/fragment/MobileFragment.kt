@@ -22,21 +22,50 @@ import kotlinx.android.synthetic.main.fragment_mobile.*
 
 class MobileFragment : Fragment(), MobileInterface, MobileInterface.OnClickMobileList {
 
+    companion object {
+        fun newInstance(): MobileFragment = MobileFragment()
+    }
+
     private lateinit var presenter: MobileListPresenter
     private lateinit var mobileAdapter: MobileAdapter
     private lateinit var shareFavorite: ModelPreferences
     private var onListener: MainActivityInterface? = null
 
-    companion object {
-        fun newInstance(): MobileFragment = MobileFragment()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_mobile, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        context?.let {
+            shareFavorite = ModelPreferences(it)
+            presenter = MobileListPresenter(this, shareFavorite, MobilePhoneManager().createService())
+            presenter.getMobileApi()
+        }
+        mobileAdapter = MobileAdapter(this, shareFavorite)
+        rvMobile.adapter = mobileAdapter
+        rvMobile.layoutManager = LinearLayoutManager(context)
+        rvMobile.itemAnimator = DefaultItemAnimator()
+    }
+
+    fun sortLowToHigh() {
+        presenter.getMobileSortLowToHigh()
+    }
+
+    fun sortHighToLow() {
+        presenter.getMobileHighToLow()
+    }
+
+    fun sortRating() {
+        presenter.getMobileSortRating()
+    }
+
+    fun removeSwipeFavorite(unFav: MobileModel) {
+        mobileAdapter.removeSwipeFavorite(unFav)
     }
 
     override fun onRemoveHeart(remove: MobileModel) {
         onListener?.onRemoveHeartFavorite(remove)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_mobile, container, false)
     }
 
     fun setOnListener(onListener: MainActivityInterface) {
@@ -56,36 +85,6 @@ class MobileFragment : Fragment(), MobileInterface, MobileInterface.OnClickMobil
 
     override fun onMobileDetailClick(mobile: MobileModel) {
         DetailMobileActivity.startActivity(context, mobile)
-    }
-
-    fun sortLowToHigh() {
-        presenter.getMobileSortLowToHigh()
-    }
-
-    fun sortHighToLow() {
-        presenter.getMobileHighToLow()
-    }
-
-    fun sortRating() {
-        presenter.getMobileSortRating()
-    }
-
-    fun updateUnfavorite(unFav: MobileModel) {
-        mobileAdapter.updateFavorite(unFav)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        context?.let {
-            shareFavorite = ModelPreferences(it)
-            presenter = MobileListPresenter(this, shareFavorite, MobilePhoneManager().createService())
-            presenter.getMobileApi()
-        }
-        mobileAdapter = MobileAdapter(this, shareFavorite)
-        rvMobile.adapter = mobileAdapter
-        rvMobile.layoutManager = LinearLayoutManager(context)
-        rvMobile.itemAnimator = DefaultItemAnimator()
-
     }
 
     override fun showErrorMsg(msg: String) {

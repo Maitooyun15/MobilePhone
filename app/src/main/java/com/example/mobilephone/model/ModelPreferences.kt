@@ -6,22 +6,23 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
 
-class ModelPreferences(c: Context?) {
+class ModelPreferences(context: Context?) {
 
-    val preferences = c?.getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE)
-    val editor = preferences?.edit()
-    val gson = GsonBuilder().create()
-    private lateinit var mobileList: ArrayList<MobileModel>
-
-
-    fun putObject(key: String, mobileModel: ArrayList<MobileModel>) {
-        var into = gson.toJson(mobileModel)
-        Log.e("test", "เซฟไฟล์" + mobileModel.map { it.id }.toString())
-        editor?.putString(key, into)?.apply()
-        println("List" + mobileModel)
+    companion object {
+        const val FAVORITE_KEY = "model"
     }
 
-    fun getObject(key: String): ArrayList<MobileModel> {
+    private val preferences = context?.getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE)
+    private val editor = preferences?.edit()
+    private val gson = GsonBuilder().create()
+    private lateinit var mobileList: ArrayList<MobileModel>
+
+    fun saveFavorite(key: String, mobileModel: ArrayList<MobileModel>) {
+        val into = gson.toJson(mobileModel)
+        editor?.putString(key, into)?.apply()
+    }
+
+    fun readFavorite(key: String): ArrayList<MobileModel> {
         var into = preferences?.getString(key, null)
         mobileList = try {
             gson.fromJson(into, object : TypeToken<ArrayList<MobileModel>>() {}.type)

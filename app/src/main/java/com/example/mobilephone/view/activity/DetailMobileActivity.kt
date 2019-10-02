@@ -3,7 +3,6 @@ package com.example.mobilephone.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,14 +11,11 @@ import com.example.mobilephone.model.MobileImageModel
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.presenter.MobileImagePresenter
 import com.example.mobilephone.service.MobilePhoneManager
-import com.example.mobilephone.view.contract.MobileImageInterface
 import com.example.mobilephone.view.adapter.ImageAdapter
+import com.example.mobilephone.view.contract.MobileImageInterface
 import kotlinx.android.synthetic.main.activity_detail_mobile.*
 
-
 class DetailMobileActivity : AppCompatActivity(), MobileImageInterface {
-
-    private val presenter = MobileImagePresenter(this, MobilePhoneManager().createService())
 
     companion object {
         const val EXTRA_KEY_MODEL = "MODEL"
@@ -32,15 +28,12 @@ class DetailMobileActivity : AppCompatActivity(), MobileImageInterface {
             )
     }
 
+    private val presenter = MobileImagePresenter(this, MobilePhoneManager().createService())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_mobile)
         setView()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
     }
 
     private fun setView() {
@@ -55,6 +48,11 @@ class DetailMobileActivity : AppCompatActivity(), MobileImageInterface {
         txtDescription.text = model.description
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     override fun setImageMobile(imageModel: List<MobileImageModel>) {
         val mobileAdapter = ImageAdapter(imageModel)
         rvImage.adapter = mobileAdapter
@@ -63,6 +61,6 @@ class DetailMobileActivity : AppCompatActivity(), MobileImageInterface {
     }
 
     override fun showErrorMsg(msg: String) {
-        //
+        println(msg)
     }
 }

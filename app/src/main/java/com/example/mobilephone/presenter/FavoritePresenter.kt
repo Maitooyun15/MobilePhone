@@ -1,11 +1,13 @@
 package com.example.mobilephone.presenter
 
 import com.example.mobilephone.model.ModelPreferences
+import com.example.mobilephone.model.ModelPreferences.Companion.FAVORITE_KEY
 import com.example.mobilephone.view.contract.FavoriteInterface
 
-class FavoritePresenter(val view: FavoriteInterface, share: ModelPreferences) {
+class FavoritePresenter(val view: FavoriteInterface, private val share: ModelPreferences) {
 
-    var readFavorite = share.getObject("model")
+    val readFavorite
+        get() = share.readFavorite(FAVORITE_KEY)
 
     fun getFavorite() {
         if (readFavorite.isNotEmpty()) {
@@ -30,5 +32,4 @@ class FavoritePresenter(val view: FavoriteInterface, share: ModelPreferences) {
             view.setMobile(readFavorite.sortedByDescending { it.rating })
         }
     }
-
 }

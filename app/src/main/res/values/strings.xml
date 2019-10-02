@@ -3,4 +3,5 @@
     <string name="tab_mobile">Mobile List</string>
     <string name="tab_favorite">Favorite List</string>
     <string name="mobile_price">Price: $</string>
+    <string name="mobile_rating">Rating:</string>
 </resources>

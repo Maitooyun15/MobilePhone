@@ -1,7 +1,6 @@
 package com.example.mobilephone.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilephone.R
 import com.example.mobilephone.model.MobileModel
 import com.example.mobilephone.model.ModelPreferences
-import com.example.mobilephone.presenter.FavoritePresenter
 import com.example.mobilephone.model.SwipeToDeleteCallback
+import com.example.mobilephone.presenter.FavoritePresenter
 import com.example.mobilephone.view.activity.DetailMobileActivity
 import com.example.mobilephone.view.adapter.FavoriteAdapter
 import com.example.mobilephone.view.contract.FavoriteInterface
@@ -22,19 +21,15 @@ import com.example.mobilephone.view.contract.MainActivityInterface
 import kotlinx.android.synthetic.main.fragment_favorite.*
 
 class FavoriteFragment : Fragment(), FavoriteInterface, FavoriteInterface.OnClickFavoriteList {
+
+    companion object {
+        fun newInstance(): FavoriteFragment = FavoriteFragment()
+    }
+
     private lateinit var shareFavorite: ModelPreferences
     private val favoriteAdapter: FavoriteAdapter  by lazy { FavoriteAdapter(this, shareFavorite) }
     private lateinit var presenter: FavoritePresenter
     private var onListener: MainActivityInterface? = null
-
-    companion object {
-        fun newInstance(): FavoriteFragment =
-            FavoriteFragment()
-    }
-
-    fun setOnListener(onListener: MainActivityInterface) {
-        this.onListener = onListener
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorite, container, false)
@@ -54,25 +49,11 @@ class FavoriteFragment : Fragment(), FavoriteInterface, FavoriteInterface.OnClic
         swipeSetup()
     }
 
-    override fun onFavoriteDetailClick(favorite: MobileModel) {
-        DetailMobileActivity.startActivity(context, favorite)
-    }
-
-    override fun setMobile(favoriteList: List<MobileModel>) {
-        favoriteAdapter.favoriteList(ArrayList(favoriteList))
-    }
-
-
-    override fun onSwipeRemove(unFav: MobileModel) {
-        presenter.readFavorite.remove(unFav)
-        onListener?.onRemoveSwipeFavorite(unFav)
-    }
-
     private fun swipeSetup() {
         val swipeHandler = object : SwipeToDeleteCallback(context!!) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = rvFavorite.adapter as FavoriteAdapter
-                adapter.removeAt(viewHolder.adapterPosition)
+                adapter.removeSwipeAt(viewHolder.adapterPosition)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -98,7 +79,6 @@ class FavoriteFragment : Fragment(), FavoriteInterface, FavoriteInterface.OnClic
         when (select) {
             0 -> {
                 presenter.getSortLowToHigh()
-
             }
             1 -> {
                 presenter.getSortHighToLow()
@@ -106,8 +86,11 @@ class FavoriteFragment : Fragment(), FavoriteInterface, FavoriteInterface.OnClic
             2 -> {
                 presenter.getSortRating()
             }
-
         }
+    }
+
+    fun setOnListener(onListener: MainActivityInterface) {
+        this.onListener = onListener
     }
 
     fun removeHeart(remove: MobileModel) {
@@ -115,8 +98,21 @@ class FavoriteFragment : Fragment(), FavoriteInterface, FavoriteInterface.OnClic
         presenter.readFavorite.remove(remove)
     }
 
+    override fun onFavoriteDetailClick(favorite: MobileModel) {
+        DetailMobileActivity.startActivity(context, favorite)
+    }
+
+    override fun setMobile(favoriteList: List<MobileModel>) {
+        favoriteAdapter.favoriteList(ArrayList(favoriteList))
+    }
+
+    override fun onSwipeRemove(unFav: MobileModel) {
+        presenter.readFavorite.remove(unFav)
+        onListener?.onRemoveSwipeFavorite(unFav)
+    }
+
     override fun showErrorMsg(msg: String) {
-        Log.e("error", msg)
+        println(msg)
     }
 }
 

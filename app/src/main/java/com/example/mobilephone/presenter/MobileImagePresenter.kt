@@ -10,7 +10,6 @@ import retrofit2.Response
 class MobileImagePresenter(val view: MobileImageInterface, private val service: MobileApiService) {
 
     fun getIdMobile(id: Int) {
-
         service.getMobileById(id).enqueue(object : Callback<List<MobileImageModel>> {
             override fun onFailure(call: Call<List<MobileImageModel>>, t: Throwable) {
                 println("Failed")
@@ -22,9 +21,7 @@ class MobileImagePresenter(val view: MobileImageInterface, private val service: 
                         view.setImageMobile(this)
                     }
                 }
-
             }
-
         })
     }
 }

@@ -1,6 +1,5 @@
 package com.example.mobilephone.view.activity
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -15,17 +14,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainActivityInterface {
 
+    companion object {
+        const val SORTLOWPRICE = "Price low to high"
+        const val SORTHIGHPRICE = "Price high to low"
+        const val SORTRATING = "Rating 5-1"
+    }
+
     private var check = -1
     private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
     private val fragmentMobile = MobileFragment.newInstance()
     private val fragmentFavorite = FavoriteFragment.newInstance()
-
-
-    companion object {
-        const val SORT1 = "Price low to high"
-        const val SORT2 = "Price high to low"
-        const val SORT3 = "Rating 5-1"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,18 +32,17 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
 
     private fun setView() {
-        var homeList = listOf(
+        val homeList = listOf(
             FragmentModel(getString(R.string.tab_mobile), fragmentMobile.apply { setOnListener(this@MainActivity) }),
             FragmentModel(getString(R.string.tab_favorite), fragmentFavorite.apply { setOnListener(this@MainActivity) })
         )
-
         btnSort.setOnClickListener {
-            val listItems = arrayOf(SORT1, SORT2, SORT3)
+            val listItems = arrayOf(SORTLOWPRICE, SORTHIGHPRICE, SORTRATING)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
 
-            mBuilder.setSingleChoiceItems(listItems, check) { dialogInterface, i ->
-                check = i
-                when (i) {
+            mBuilder.setSingleChoiceItems(listItems, check) { dialogInterface, sort ->
+                check = sort
+                when (sort) {
                     0 -> {
                         fragmentMobile.sortLowToHigh()
                         fragmentFavorite.sortLowToHigh()
@@ -57,7 +54,6 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
                     2 -> {
                         fragmentMobile.sortRating()
                         fragmentFavorite.sortRating()
-
                     }
                 }
                 dialogInterface.dismiss()
@@ -65,7 +61,6 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
             val mDialog = mBuilder.create()
             mDialog.show()
         }
-
         sectionsPagerAdapter = SectionsPagerAdapter(homeList, supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
         tabs.setupWithViewPager(viewPager)
@@ -76,13 +71,12 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
 
     override fun onRemoveSwipeFavorite(unFav: MobileModel) {
-        fragmentMobile.updateUnfavorite(unFav)
+        fragmentMobile.removeSwipeFavorite(unFav)
     }
 
     override fun onRemoveHeartFavorite(unFav: MobileModel) {
         fragmentFavorite.removeHeart(unFav)
     }
-
 }
 
 
