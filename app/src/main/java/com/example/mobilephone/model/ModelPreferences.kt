@@ -23,7 +23,7 @@ class ModelPreferences(context: Context?) {
     }
 
     fun readFavorite(key: String): ArrayList<MobileModel> {
-        var into = preferences?.getString(key, null)
+        val into = preferences?.getString(key, null)
         mobileList = try {
             gson.fromJson(into, object : TypeToken<ArrayList<MobileModel>>() {}.type)
         } catch (ex: RuntimeException) {

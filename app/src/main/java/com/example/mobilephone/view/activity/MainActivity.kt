@@ -15,9 +15,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     companion object {
-        const val SORTLOWPRICE = "Price low to high"
-        const val SORTHIGHPRICE = "Price high to low"
-        const val SORTRATING = "Rating 5-1"
+        const val SORT_LOW_PRICE = "Price low to high"
+        const val SORT_HIGH_PRICE = "Price high to low"
+        const val SORT_HIGH_RATING = "Rating 5-1"
     }
 
     private var check = -1
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
             FragmentModel(getString(R.string.tab_favorite), fragmentFavorite.apply { setOnListener(this@MainActivity) })
         )
         btnSort.setOnClickListener {
-            val listItems = arrayOf(SORTLOWPRICE, SORTHIGHPRICE, SORTRATING)
+            val listItems = arrayOf(SORT_LOW_PRICE, SORT_HIGH_PRICE, SORT_HIGH_RATING)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
 
             mBuilder.setSingleChoiceItems(listItems, check) { dialogInterface, sort ->
