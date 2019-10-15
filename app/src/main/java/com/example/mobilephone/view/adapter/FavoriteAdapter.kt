@@ -12,9 +12,9 @@ import com.example.mobilephone.view.contract.FavoriteInterface
 import com.squareup.picasso.Picasso
 
 class FavoriteAdapter(
-    private val listener: FavoriteInterface.OnClickFavoriteList, private var shareFav: ModelPreferences
-) :
-    RecyclerView.Adapter<FavoriteViewHolder>() {
+    private val listener: FavoriteInterface.OnClickFavoriteList,
+    private var shareFav: ModelPreferences
+) : RecyclerView.Adapter<FavoriteViewHolder>() {
 
     private var mobileList: ArrayList<MobileModel> = arrayListOf()
 
@@ -29,7 +29,7 @@ class FavoriteAdapter(
     }
 
     fun removeSwipeAt(position: Int) {
-        var removeFav = mobileList[position]
+        val removeFav = mobileList[position]
         mobileList.removeAt(position)
         shareFav.saveFavorite("model", mobileList)
         listener.onSwipeRemove(removeFav)
@@ -55,7 +55,13 @@ class FavoriteAdapter(
 }
 
 class FavoriteViewHolder(parent: ViewGroup) :
-    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_favorite, parent, false)) {
+    RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(
+            R.layout.item_favorite,
+            parent,
+            false
+        )
+    ) {
 
     private val imageMobile: ImageView = itemView.findViewById(R.id.imagesMobile)
     private val txtName: TextView = itemView.findViewById(R.id.namesMobile)
